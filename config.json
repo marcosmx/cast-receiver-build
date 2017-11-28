@@ -3,5 +3,5 @@
     "images": {
         "logo" : "logo.svg"
     },
-    "logLevel": "warn" 
+    "logLevel": "debug" 
 }
