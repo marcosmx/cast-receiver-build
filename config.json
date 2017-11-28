@@ -1,7 +1,7 @@
 {
-    "playerBrandingId" : "e48c9b51282d406f957c666149763424",
+    "playerBrandingId" : "<Place your Ooyala player ID here>",
     "images": {
         "logo" : "logo.svg"
     },
-    "logLevel": "debug" 
+    "logLevel": "warn" 
 }
