@@ -35,9 +35,10 @@ class CastPlayer {
         logger.debug(LOG_PREFIX, "New asset params:", data);
         this.ec = data.ec || null;
         if (typeof data.params === 'string'){
-            logger.warn(LOG_PREFIX, "Params are not JSON object:", data.params);
+            logger.warn(LOG_PREFIX, "Params are not a proper JSON object:", data.params);
             try {
-                data.params = JSON.parse(data.params);
+                // TODO: Once PBA fixes the issue with params as strings, please change this line to JSON.parse method
+                data.params = eval( "(" + data.params + ")");
             } catch (e) {
                 logger.error(LOG_PREFIX, "Cannot parse params:", e);
             }
