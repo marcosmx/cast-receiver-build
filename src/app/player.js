@@ -197,6 +197,7 @@ class CastPlayer {
 
     notifySenders() {
         let message = Object.assign({}, arguments);
+        logger.info(LOG_PREFIX, "Message to senders:", message);
         this.mb.broadcast(message);
     }
 
