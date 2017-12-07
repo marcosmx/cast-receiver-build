@@ -2,7 +2,7 @@ import * as logger from 'loglevel'
 import castManager from './receiverManager'
 
 const timeout = {
-    PAUSED: 1000 * 60 * 5, // 5 minutes
+    PAUSED: 1000 * 60 * 2, // 5 minutes
     IDLE: 1000 * 60 * 10 // 5 minutes
 };
 
