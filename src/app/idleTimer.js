@@ -9,7 +9,7 @@ const timeout = {
 var idleTimerId = null;
 
 function setIdle (time) {
-    logger.info(LOG_PREFIX, 'Idle timeout:', time);
+    logger.info('Timer Idle for:', time);
     clearTimeout(idleTimerId);
     if (time) {
         idleTimerId = setTimeout(()=>{
