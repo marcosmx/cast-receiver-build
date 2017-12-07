@@ -1,5 +1,6 @@
 import * as logger from 'loglevel'
 import UIManager from './uiManager'
+import Timer from './idleTimer'
 
 const LOG_PREFIX = 'ReceiverManager:';
 
@@ -11,6 +12,7 @@ castReceiverManager.onReady = onReady;
 
 function onReady() {
     UIManager.setStatusCast(UIManager.status.READY);
+    Timer.setIdle(Timer.TIMEOUT.IDLE);
 }
 
 function onSenderConnected(e) {

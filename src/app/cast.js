@@ -2,6 +2,7 @@ import castManager from './receiverManager'
 import CastPlayer from './player'
 import * as logger from 'loglevel'
 import UIManager from './uiManager'
+import Timer from './idleTimer'
 
 import '../styles/player.css'
 
@@ -18,5 +19,20 @@ mediaManager.onLoad = function(e) {
     castPlayer.setAsset(e.data.media.customData);
     mediaManager.origOnLoad(e);
 }
+
+mediaManager.origPause = mediaManager.onPause;
+mediaManager.onPause = function(e) {
+    logger.info("MediaManager:onPause", e);
+    Timer.setIdle(Timer.TIMEOUT.PAUSED);
+    mediaManager.origPause(e);
+}
+
+mediaManager.origPlay = mediaManager.onPlay;
+mediaManager.onPlay = function(e) {
+    logger.info("MediaManager:onPlay", e);
+    Timer.setIdle();
+    mediaManager.origPlay(e);
+}
+
 
 castManager.start();

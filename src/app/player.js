@@ -7,11 +7,6 @@ const CASTNAMESPACE = 'urn:x-cast:ooyala';
 const PLAYERNAMESPACE = 'chromecast';
 const LOG_PREFIX = 'Player:';
 
-const IDLE_TIMEOUT = {
-    PAUSED: 1000 * 60 * 5, // 5 minutes
-    IDLE: 1000 * 60 * 10 // 5 minutes
-};
-
 class CastPlayer {
     constructor() {
         this.OOPlayer = null;
@@ -123,26 +118,14 @@ class CastPlayer {
                     break;
                 case OO.STATE.PAUSED:
                     this.state = cast.receiver.media.PlayerState.PAUSED;
-                    this.setIdleTimeout(IDLE_TIMEOUT.PAUSED);
                     break;
                 case OO.STATE.READY:
                     this.state = cast.receiver.media.PlayerState.IDLE;
-                    this.setIdleTimeout(IDLE_TIMEOUT.IDLE);
                 break;
             }
         }
         logger.info(LOG_PREFIX,"State:", this.state);
         return this.state;
-    }
-
-    setIdleTimeout (time) {
-        logger.info(LOG_PREFIX, 'Idle timeout:', time);
-        clearTimeout(this.idleTimerId);
-        if (time) {
-            this.idleTimerId = setTimeout(()=>{
-                castManager.stop();
-            }, time)
-        }
     }
 
     play() {
