@@ -33,3 +33,8 @@ body {
     -moz-filter: none !important;
     filter: none !important;
 }
+
+.oo-player-container .oo-action-icon-pause.oo-animate-pause {
+    -webkit-transition: none !important;
+    transition: none !important;
+}
