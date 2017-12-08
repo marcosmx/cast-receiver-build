@@ -182,8 +182,7 @@ class CastPlayer {
         this.loadCallback = null;
     }
 
-    onCreateHandlers (player) {
-        player.mb.subscribe(OO.EVENTS.PLAYER_CREATED, PLAYERNAMESPACE, this.onPlayerCreated.bind(this));        
+    onCreateHandlers (player) {  
         player.mb.subscribe(OO.EVENTS.PLAYBACK_READY, PLAYERNAMESPACE, this.onPlaybackReady.bind(this));
         player.mb.subscribe(OO.EVENTS.PLAYING, PLAYERNAMESPACE, this.notifySenders.bind(this));
         player.mb.subscribe(OO.EVENTS.PLAYHEAD_TIME_CHANGED, PLAYERNAMESPACE, this.onPlayheadChanged.bind(this));
@@ -200,16 +199,14 @@ class CastPlayer {
         this.mb.broadcast(message);
     }
 
-    onPlayerCreated() {
-        // We will try to get the skin instance from the player API
-        this.skinInstance = this.OOPlayer.modules.find((m) => {return m.name == "Html5Skin";});
-    }
-
     onSeeked(event, time) {
         // if the player is in PAUSE state then try to update the scrubber bar to the
         // actual time
+        var skin = this.OOPlayer.modules.find((m) => {return m.name == "Html5Skin";});
         try {
-            this.skinInstance.instance.updateSeekingPlayhead(time);
+            if (skin){
+                skin.instance.updateSeekingPlayhead(time);
+            }
         } catch (e) {
             logger.warn(LOG_PREFIX, "Skin instance error:", e);
         }
