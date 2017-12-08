@@ -15,6 +15,7 @@ class CastPlayer {
         this.errorCallback = null;
         this.loadCallback = null;
         this.idleTimerId = null;
+        this.skinInstance = null;
         this.ec = null;
         this.mb = null;
         this.setMessageBus();
@@ -181,13 +182,14 @@ class CastPlayer {
         this.loadCallback = null;
     }
 
-    onCreateHandlers (player) {        
+    onCreateHandlers (player) {
+        player.mb.subscribe(OO.EVENTS.PLAYER_CREATED, PLAYERNAMESPACE, this.onPlayerCreated.bind(this));        
         player.mb.subscribe(OO.EVENTS.PLAYBACK_READY, PLAYERNAMESPACE, this.onPlaybackReady.bind(this));
         player.mb.subscribe(OO.EVENTS.PLAYING, PLAYERNAMESPACE, this.notifySenders.bind(this));
         player.mb.subscribe(OO.EVENTS.PLAYHEAD_TIME_CHANGED, PLAYERNAMESPACE, this.onPlayheadChanged.bind(this));
         player.mb.subscribe(OO.EVENTS.PLAYED, PLAYERNAMESPACE, this.onPlayed.bind(this));
         player.mb.subscribe(OO.EVENTS.SEEK, PLAYERNAMESPACE, this.notifySenders.bind(this));
-        player.mb.subscribe(OO.EVENTS.SEEKED, PLAYERNAMESPACE, this.notifySenders.bind(this));
+        player.mb.subscribe(OO.EVENTS.SEEKED, PLAYERNAMESPACE, this.onSeeked.bind(this));
         player.mb.subscribe(OO.EVENTS.PAUSED, PLAYERNAMESPACE, this.notifySenders.bind(this));
         player.mb.subscribe(OO.EVENTS.ERROR, PLAYERNAMESPACE, this.onError.bind(this));
         player.mb.subscribe(OO.EVENTS.API_ERROR, PLAYERNAMESPACE, this.onApiError.bind(this));
@@ -197,6 +199,22 @@ class CastPlayer {
         let message = Object.assign({}, arguments);
         logger.info(LOG_PREFIX, "Message to senders:", message);
         this.mb.broadcast(message);
+    }
+
+    onPlayerCreated() {
+        // We will try to get the skin instance from the player API
+        this.skinInstance = this.OOPlayer.modules.find((m) => {return m.name == "Html5Skin";});
+    }
+
+    onSeeked(event, time) {
+        // if the player is in PAUSE state then try to update the scrubber bar to the
+        // actual time
+        try {
+            this.skinInstance.instance.updateSeekingPlayhead(time);
+        } catch (e) {
+            logger.warn(LOG_PREFIX, "Skin instance error:", e);
+        }
+        this.notifySenders.apply(this, arguments);
     }
 
     onPlaybackReady() {
